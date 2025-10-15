@@ -11,10 +11,6 @@ from libs import hashing, jwts
 
 router = APIRouter(prefix="/auth")
 
-@router.post("/login/form", response_model=TokenResponse)
-async def token(req: LoginRequest = Depends(LoginRequest.as_form), db: Session = Depends(depends.get_db)):
-    return loginToken(req, db)
-
 
 @router.post("/login", response_model=TokenResponse)
 async def login(req: LoginRequest, db: Session = Depends(depends.get_db)):

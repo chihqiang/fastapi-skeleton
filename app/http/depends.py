@@ -20,7 +20,7 @@ def get_db():
         db.close()
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login/form")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 def get_current_user(
