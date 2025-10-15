@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+import datetime
 from typing import Union, Any, Optional
 import jwt
 
@@ -14,7 +14,7 @@ ALGORITHM = "HS256"
 # -----------------------------
 # 生成 JWT Token
 # -----------------------------
-def encode_token(subject: Union[str, Any], expires_delta: timedelta = timedelta(0)) -> str:
+def encode_token(subject: Union[str, Any], expires_delta: datetime.timedelta = datetime.timedelta(0)) -> str:
     """
     生成 JWT Token。
 
@@ -39,7 +39,7 @@ def encode_token(subject: Union[str, Any], expires_delta: timedelta = timedelta(
 
     # 只有当 expires_delta > 0 时才设置 exp
     if expires_delta is not None and expires_delta.total_seconds() > 0:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.datetime.now(datetime.UTC) + expires_delta
         to_encode.update({"exp": expire})
 
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

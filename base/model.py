@@ -1,4 +1,5 @@
-from datetime import datetime
+import datetime
+
 from sqlalchemy import Column, DateTime, create_engine, pool
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
@@ -35,14 +36,14 @@ class BaseModel(Base):
 
     created_at = Column(
         DateTime,
-        default=datetime.utcnow,
+        default=datetime.datetime.now(datetime.UTC),
         nullable=False,
         comment="创建时间"
     )
     updated_at = Column(
         DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        default=datetime.datetime.now(datetime.UTC),
+        onupdate=datetime.datetime.now(datetime.UTC),
         nullable=False,
         comment="更新时间"
     )

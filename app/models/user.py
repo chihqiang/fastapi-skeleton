@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from base.model import BaseModelWithSoftDelete
 
+
 class User(BaseModelWithSoftDelete):
     """
     用户模型
