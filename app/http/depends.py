@@ -35,6 +35,9 @@ def get_current_user(
     except jwt.InvalidTokenError:
         # token 无效
         raise AuthenticationError(message="Could not validate credentials")
+    except Exception as e:
+        # 处理其他未预料到的异常
+        raise AuthenticationError(message=f"Token validation failed: {str(e)}")
     user_id = payload.get('sub')
     user = User.undelete(db).filter(User.id == user_id).first()
     if not user:
