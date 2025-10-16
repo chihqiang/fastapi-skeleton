@@ -1,12 +1,12 @@
 import uvicorn
 
-from boot import logger
+from boot.setup import logger
 from boot.application import create_app
 
 logger.setup()
 
 # ------------------------
-# 2. 创建 FastAPI 应用实例
+# 创建 FastAPI 应用实例
 # ------------------------
 # create_app 是自定义的应用工厂函数，负责初始化应用
 # 例如注册路由、异常处理、中间件等

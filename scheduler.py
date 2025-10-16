@@ -1,15 +1,14 @@
 import logging
-from multiprocessing import Process
-from boot import scheduler, logger
+from boot import scheduler
+from boot.setup import logger
 from libs import process
 
-# 初始化日志配置（假设setup()方法用于配置日志的输出格式、级别等）
 logger.setup()
 
 process = process.Manager()
 
 
-@process.register("scheduler", 1)
+@process.register("scheduler")
 def work_scheduler():
     """
     工作函数：启动调度器

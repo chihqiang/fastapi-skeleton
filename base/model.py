@@ -36,14 +36,14 @@ class BaseModel(Base):
 
     created_at = Column(
         DateTime,
-        default=lambda: datetime.datetime.now(datetime.UTC),
+        default=lambda: datetime.datetime.now(),
         nullable=False,
         comment="创建时间"
     )
     updated_at = Column(
         DateTime,
-        default=lambda: datetime.datetime.now(datetime.UTC),
-        onupdate=lambda: datetime.datetime.now(datetime.UTC),
+        default=lambda: datetime.datetime.now(),
+        onupdate=lambda: datetime.datetime.now(),
         nullable=False,
         comment="更新时间"
     )
