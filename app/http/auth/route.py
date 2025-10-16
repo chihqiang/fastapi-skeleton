@@ -8,7 +8,7 @@ from app.exceptions.exception import AuthenticationError
 from app.http import depends
 from app.http.auth.model import TokenResponse
 from app.models.user import User
-from libs import hashing, jwts
+from libs import crypto
 
 router = APIRouter(prefix="/auth")
 
@@ -43,7 +43,7 @@ def loginToken(username: str, password: str, db: Session) -> TokenResponse:
     user = User.undelete(db).filter(User.username == username).first()
 
     # 验证密码
-    if not user or not hashing.verify(password, user.password):
+    if not user or not crypto.hash_verify(password, user.password):
         raise AuthenticationError("用户名或密码错误")
 
     # 检查用户是否启用
@@ -54,7 +54,7 @@ def loginToken(username: str, password: str, db: Session) -> TokenResponse:
     expires_delta = timedelta(hours=3)
 
     # 生成 JWT Token
-    access_token = jwts.encode_token(user.id, expires_delta)
+    access_token = crypto.jwt_encode(user.id, expires_delta)
 
     # 返回 Token 响应
     return TokenResponse(

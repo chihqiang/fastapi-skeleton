@@ -1,8 +1,15 @@
+from passlib.context import CryptContext
 import datetime
 from typing import Union, Any, Optional
 import jwt
-
 from config import setting
+
+# -----------------------------
+# 密码加密上下文
+# -----------------------------
+# 使用 bcrypt 算法进行哈希
+# deprecated="auto" 表示自动弃用旧算法，推荐新算法
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # -----------------------------
 # JWT 核心配置
@@ -11,10 +18,31 @@ SECRET_KEY = setting.SECRET_KEY
 ALGORITHM = "HS256"
 
 
+def hash_verify(plain_password: str, hashed_password: str) -> bool:
+    """
+    验证明文密码是否与哈希密码匹配
+
+    :param plain_password: 用户输入的明文密码
+    :param hashed_password: 数据库中存储的哈希密码
+    :return: True 如果匹配，否则 False
+    """
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def hash_make(password: str) -> str:
+    """
+    将明文密码加密为哈希密码
+
+    :param password: 用户输入的明文密码
+    :return: 加密后的哈希密码字符串
+    """
+    return pwd_context.hash(password)
+
+
 # -----------------------------
 # 生成 JWT Token
 # -----------------------------
-def encode_token(subject: Union[str, Any], expires_delta: datetime.timedelta = datetime.timedelta(0)) -> str:
+def jwt_encode(subject: Union[str, Any], expires_delta: datetime.timedelta = datetime.timedelta(0)) -> str:
     """
     生成JSON Web Token (JWT)
 
@@ -33,15 +61,14 @@ def encode_token(subject: Union[str, Any], expires_delta: datetime.timedelta = d
 
     使用示例：
         # 生成永不过期的令牌
-        permanent_token = encode_token("user_1001")
-
+        permanent_token = jwt_encode("user_1001")
         # 生成30分钟后过期的令牌
-        temporary_token = encode_token("user_1001", datetime.timedelta(minutes=30))
+        temporary_token = jwt_encode("user_1001", datetime.timedelta(minutes=30))
     """
     to_encode = {"sub": str(subject)}
 
     if expires_delta is not None and expires_delta.total_seconds() > 0:
-        expire = datetime.datetime.now(datetime.UTC) + expires_delta
+        expire = datetime.datetime.now() + expires_delta
         to_encode.update({"exp": expire})
 
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -50,7 +77,7 @@ def encode_token(subject: Union[str, Any], expires_delta: datetime.timedelta = d
 # -----------------------------
 # 解析 JWT Token
 # -----------------------------
-def decode_token(token: str) -> Optional[Union[str, Any]]:
+def jwt_decode(token: str) -> Optional[Union[str, Any]]:
     """
     解析JWT令牌，提取负载数据
 
@@ -78,7 +105,7 @@ def decode_token(token: str) -> Optional[Union[str, Any]]:
 
     使用示例：
         try:
-            payload = decode_token(auth_token)
+            payload = jwt_decode(auth_token)
             user_id = payload["sub"]  # 提取用户标识
         except jwt.ExpiredSignatureError:
             # 处理令牌过期逻辑

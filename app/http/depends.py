@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.exceptions.exception import AuthenticationError
 from app.models.user import User
 from base.model import SessionLocal
-from libs import jwts
+from libs import crypto
 import jwt
 
 
@@ -28,7 +28,7 @@ def get_current_user(
         db: Session = Depends(get_db)
 ) -> User:
     try:
-        payload = jwts.decode_token(tokenStr)
+        payload = crypto.jwt_decode(tokenStr)
     except jwt.ExpiredSignatureError:
         # token 已过期
         raise AuthenticationError(message="Token Expired")

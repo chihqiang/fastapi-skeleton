@@ -1,12 +1,9 @@
-"""
-创建数据库表脚本
-直接根据模型生成表结构
-使用 logging 输出信息
-"""
-
-# 添加项目根目录到 Python 模块搜索路径
 import sys
 import os
+import logging
+from base.model import engine, Base, SessionLocal
+from app.models.user import User
+from libs import crypto
 
 # 获取当前文件所在目录
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -14,12 +11,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(current_dir)
 # 添加项目根目录到模块搜索路径
 sys.path.insert(0, project_root)
-
-import logging
-
-from base.model import engine, Base, SessionLocal
-from app.models.user import User
-from libs import hashing
 
 # -----------------------------
 # 配置日志
@@ -48,7 +39,7 @@ def create_default_admin():
         admin_user = User(
             username="admin",
             cellphone="13800000000",
-            password=hashing.make("123456"),
+            password=crypto.hash_make("123456"),
             email="admin@example.com",
             nickname="管理员",
             state="enabled",
