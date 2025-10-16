@@ -1,6 +1,6 @@
 import logging
 import uvicorn
-from bootstrap.application import create_app
+from boot.application import create_app
 
 # ------------------------
 # 1. 配置全局日志

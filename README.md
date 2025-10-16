@@ -45,7 +45,7 @@ python main.py
 应用使用工厂函数模式创建FastAPI实例，通过提供器机制注册各种组件：
 
 ```python
-# bootstrap/application.py
+# boot/application.py
 def create_app() -> FastAPI:
     app = FastAPI(debug=True, default_response_class=ORJSONResponse)
     register(app, handle_exception)  # 注册异常处理
@@ -110,11 +110,13 @@ class Product(BaseModel):
 ```python
 # 示例：每分钟执行一次的任务
 import datetime
-from bootstrap.scheduler import scheduler
+from boot.scheduler import scheduler
+
 
 @scheduler.scheduled_job('cron', minute='*', id='minute_task')
 def minute_task():
     print(f"[Task] 当前时间: {datetime.datetime.now()}")
+
 
 # 示例：每天凌晨1点执行的任务
 @scheduler.scheduled_job('cron', hour=1, minute=0, id='daily_task')

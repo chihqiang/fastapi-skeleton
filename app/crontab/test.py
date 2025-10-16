@@ -1,6 +1,6 @@
 import datetime
 
-from bootstrap.scheduler import scheduler
+from boot.scheduler import scheduler
 
 
 # 每分钟执行一次任务

@@ -1,6 +1,6 @@
 import logging
 import signal
-from bootstrap.scheduler import create_scheduler
+from boot.scheduler import create_scheduler
 
 
 def handle_shutdown(signum, frame):

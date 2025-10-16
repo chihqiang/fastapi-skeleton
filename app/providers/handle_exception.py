@@ -1,7 +1,8 @@
 from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException
-from starlette.requests import Request
-from starlette.responses import JSONResponse
+from fastapi import status
+from fastapi.exceptions import HTTPException
+from fastapi.requests import Request
+from fastapi.responses import JSONResponse
 from app.exceptions.exception import AuthenticationError, AuthorizationError
 
 
@@ -19,7 +20,8 @@ def register(app):
         处理身份验证失败的异常 (AuthenticationError)
         返回 HTTP 401 未授权响应
         """
-        return JSONResponse(status_code=401, content={"code": 401, "message": e.message, "data": None})
+        return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED,
+                            content={"code": status.HTTP_401_UNAUTHORIZED, "message": e.message, "data": None})
 
     @app.exception_handler(AuthorizationError)
     async def authorization_exception_handler(request: Request, e: AuthorizationError):
@@ -27,7 +29,8 @@ def register(app):
         处理权限不足的异常 (AuthorizationError)
         返回 HTTP 403 禁止访问响应
         """
-        return JSONResponse(status_code=403, content={"code": 403, "message": e.message, "data": None})
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN,
+                            content={"code": status.HTTP_403_FORBIDDEN, "message": e.message, "data": None})
 
     @app.exception_handler(HTTPException)
     async def custom_http_exception_handler(request: Request, exc):
@@ -36,7 +39,8 @@ def register(app):
         可以直接调用 FastAPI 默认 http_exception_handler
         """
         # return await http_exception_handler(request, exc)
-        return JSONResponse(status_code=200, content={"code": exc.status_code, "message": exc.detail, "data": None})
+        return JSONResponse(status_code=status.HTTP_200_OK,
+                            content={"code": exc.status_code, "message": exc.detail, "data": None})
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc):
@@ -50,4 +54,6 @@ def register(app):
         else:
             full_message = "参数校验失败"
         # return await request_validation_exception_handler(request, exc)
-        return JSONResponse(status_code=200, content={"code": 422, "message": full_message, "data": None})
+        return JSONResponse(status_code=status.HTTP_200_OK,
+                            content={"code": status.HTTP_422_UNPROCESSABLE_CONTENT, "message": full_message,
+                                     "data": None})
