@@ -34,6 +34,7 @@ class Manager:
             self.process_configs.append({
                 "name": name,
                 "func_key": func_key,
+                "number": number,
                 "args": args or (),
                 "kwargs": kwargs or {}
             })
@@ -46,7 +47,7 @@ class Manager:
         """
         启动所有已配置的进程
         - 如果已有进程在运行，先调用 terminate_all() 清理
-        - 遍历 process_configs，通过原始函数创建 Process 对象并启动
+        - 遍历 process_configs，根据number参数创建多个进程
         - 将已启动的进程对象保存到 self.processes
         """
         if not self.process_configs:
@@ -65,11 +66,16 @@ class Manager:
                     logging.error(f"找不到进程[{config['name']}]的原始函数：{config['func_key']}")
                     continue
 
-                # 创建并启动进程
-                p = Process(name=config["name"], target=target_func, args=config["args"], kwargs=config["kwargs"])
-                p.start()
-                self.processes.append(p)
-                logging.info(f"进程 [{config['name']}] 启动成功，PID: {p.pid}")
+                # 根据number参数创建多个进程
+                for i in range(config["number"]):
+                    # 为每个进程生成唯一名称
+                    process_name = f"{config['name']}-{i + 1}" if config["number"] > 1 else config["name"]
+
+                    # 创建并启动进程
+                    p = Process(name=process_name, target=target_func, args=config["args"], kwargs=config["kwargs"])
+                    p.start()
+                    self.processes.append(p)
+                    logging.info(f"进程 [{process_name}] 启动成功，PID: {p.pid}")
 
             return len(self.processes) > 0
         except Exception as e:

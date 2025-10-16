@@ -9,7 +9,7 @@ logger.setup()
 process = process.Manager()
 
 
-@process.register("scheduler")
+@process.register("scheduler", 1)
 def work_scheduler():
     """
     工作函数：启动调度器
