@@ -1,8 +1,6 @@
 import logging
-import signal
 
 from apscheduler.schedulers.blocking import BlockingScheduler
-from app.providers import logging_provider
 from config import setting
 from libs.modules import auto_import_modules
 
@@ -22,8 +20,6 @@ def create_scheduler() -> BlockingScheduler:
     Returns:
         BlockingScheduler: 已注册所有任务的调度器实例
     """
-    # 初始化日志系统，例如设置日志格式、级别等
-    logging_provider.register()
     logging.info("BlockingScheduler initializing")
     # 返回调度器实例，外部可调用 start() 启动
     return scheduler
@@ -31,12 +27,7 @@ def create_scheduler() -> BlockingScheduler:
 
 def start():
     """调度器主启动函数"""
-    # 注册系统信号处理器，支持更多优雅关闭的场景
-    signal.signal(signal.SIGINT, handle_shutdown)  # 处理Ctrl+C
-    signal.signal(signal.SIGTERM, handle_shutdown)  # 处理kill命令
-
     logging.info("===== 开始启动定时任务调度器 =====")
-
     # 创建调度器实例，注册所有任务
     scheduler_app = create_scheduler()
     try:
@@ -68,15 +59,3 @@ def start():
         if 'scheduler' in locals():
             scheduler_app.shutdown(wait=False)  # 不等待，立即关闭
         logging.critical("调度器异常退出", exc_info=True)
-
-
-def handle_shutdown(signum, frame):
-    """
-    处理系统信号的回调函数，用于优雅关闭调度器
-
-    Args:
-        signum: 信号编号
-        frame: 当前栈帧
-    """
-    signal_name = signal.Signals(signum).name
-    logging.info(f"接收到 {signal_name} 信号，准备关闭调度器...")

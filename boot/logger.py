@@ -1,11 +1,10 @@
 import logging
 import sys
 from loguru import logger
-
 from config import setting
 
 
-def register(app=None):
+def setup():
     """
     注册日志系统，统一接管 Python logging 与 Loguru 的日志输出。
     可在 FastAPI 启动时调用，例如：
@@ -13,9 +12,9 @@ def register(app=None):
         register(app)
     """
     # 从配置中读取日志级别、路径和保留时间
-    level = setting.LOG_LEVEL           # 日志级别，例如 "INFO"、"DEBUG"
-    path = setting.LOG_PATH             # 日志文件保存路径，如 "storage/logs/fastapi-{time:YYYY-MM-DD}.log"
-    retention = setting.LOG_RETENTION   # 日志保留时间，例如 "14 days"
+    level = setting.LOG_LEVEL  # 日志级别，例如 "INFO"、"DEBUG"
+    path = setting.LOG_PATH  # 日志文件保存路径，如 "storage/logs/fastapi-{time:YYYY-MM-DD}.log"
+    retention = setting.LOG_RETENTION  # 日志保留时间，例如 "14 days"
 
     # 拦截所有标准 logging 模块的日志，交由 Loguru 统一处理
     logging.root.handlers = [InterceptHandler()]
@@ -42,6 +41,7 @@ class InterceptHandler(logging.Handler):
     该类用于拦截 Python 原生 logging 的日志消息，
     并将其转发给 Loguru，确保所有日志系统统一格式与输出。
     """
+
     def emit(self, record):
         """
         emit() 方法在每次 logging 记录日志时被调用，

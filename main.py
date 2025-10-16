@@ -1,13 +1,9 @@
-import logging
 import uvicorn
+
+from boot import logger
 from boot.application import create_app
 
-# ------------------------
-# 1. 配置全局日志
-# ------------------------
-# logging.basicConfig 用于快速配置日志输出
-# level=logging.DEBUG 表示输出 DEBUG 及以上级别的日志
-logging.basicConfig(level=logging.DEBUG)
+logger.setup()
 
 # ------------------------
 # 2. 创建 FastAPI 应用实例
