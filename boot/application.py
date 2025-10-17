@@ -1,23 +1,27 @@
 import logging
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
 from app.providers import handle_exception, route_provider
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logging.info("应用启动中...")
+    yield
+    logging.info("应用正在关闭...")
+
+
 def create_app() -> FastAPI:
-    """
-    创建 FastAPI 应用实例的工厂函数。
-    步骤：
-    1. 创建 FastAPI 实例
-    2. 注册异常处理器
-    3. 启动路由提供器
-    4. 返回应用实例
-    """
-    app = FastAPI(debug=True, default_response_class=ORJSONResponse)
+    app = FastAPI(
+        debug=True,
+        lifespan=lifespan,
+        default_response_class=ORJSONResponse
+    )
     register(app, handle_exception)  # 注册异常处理提供器
     boot(app, route_provider)  # 启动路由提供器
-
     return app
 
 
