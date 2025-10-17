@@ -1,10 +1,10 @@
 import logging
 
-from boot.scheduler import creat_app
+from boot.scheduler import create_app
 from boot.setup import logger
 
 logger.setup()
-app = creat_app()
+app = create_app()
 
 if __name__ == "__main__":
     """调度器主启动函数"""

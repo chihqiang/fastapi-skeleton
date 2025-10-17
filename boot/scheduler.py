@@ -22,7 +22,7 @@ blocking = BlockingScheduler(
 
 
 @modules.loader(package_name=setting.CRONTAB_PACKAGE_NAME, scan_prior=True)
-def creat_app():
+def create_app() -> BlockingScheduler:
     """调度器主启动函数"""
     logging.info("===== 开始启动定时任务调度器 =====")
     global blocking
