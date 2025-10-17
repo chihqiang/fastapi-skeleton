@@ -9,9 +9,14 @@ from app.providers import handle_exception, route_provider
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logging.info("应用启动中...")
-    yield
-    logging.info("应用正在关闭...")
+    logging.info("应用生命周期启动 - 开始初始化资源")
+    try:
+        # TODO start process
+        yield
+        # TODO stop process
+        logging.info("应用生命周期即将结束 - 开始清理资源")
+    finally:
+        logging.info("应用生命周期结束 - 所有资源已清理")
 
 
 def create_app() -> FastAPI:
