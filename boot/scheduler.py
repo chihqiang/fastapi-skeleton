@@ -1,11 +1,15 @@
 import logging
 
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.blocking import BlockingScheduler
 from config import setting
 from libs import modules
 
 # 全局调度器实例，所有任务装饰器会使用它注册任务
 blocking = BlockingScheduler(
+    jobstores={
+        "default": SQLAlchemyJobStore(url=setting.DATABASE_URL),
+    },
     # 时区配置（优先使用项目配置，默认UTC）
     timezone=getattr(setting, 'TIMEZONE', 'UTC'),
     # 任务默认参数（统一控制任务行为）
@@ -21,6 +25,7 @@ blocking = BlockingScheduler(
 def start():
     """调度器主启动函数"""
     logging.info("===== 开始启动定时任务调度器 =====")
+    global blocking
     try:
         # 打印已注册的任务列表，便于验证
         jobs = blocking.get_jobs()
