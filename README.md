@@ -16,12 +16,6 @@
 
 ## 🚀 快速开始
 
-### 环境要求
-
-- Python 3.8+ 
-- pip
-- SQLite (默认数据库)
-
 ### 安装依赖
 
 ```bash
@@ -110,16 +104,16 @@ class Product(BaseModel):
 ```python
 # 示例：每分钟执行一次的任务
 import datetime
-from boot.scheduler import scheduler
+from boot.scheduler import blocking
 
 
-@scheduler.scheduled_job('cron', minute='*', id='minute_task')
+@blocking.scheduled_job('cron', minute='*', id='minute_task')
 def minute_task():
     print(f"[Task] 当前时间: {datetime.datetime.now()}")
 
 
 # 示例：每天凌晨1点执行的任务
-@scheduler.scheduled_job('cron', hour=1, minute=0, id='daily_task')
+@blocking.scheduled_job('cron', hour=1, minute=0, id='daily_task')
 def daily_task():
     print(f"[Daily Task] 执行日期: {datetime.date.today()}")
 ```
