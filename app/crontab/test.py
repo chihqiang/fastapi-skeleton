@@ -1,11 +1,11 @@
 import datetime
-from boot.scheduler import blocking
+from boot.scheduler import app
 
 
 # ==========================================
 # 定时任务示例 1：间隔触发（Interval）
 # ==========================================
-@blocking.scheduled_job('interval', seconds=10, id='interval_job')
+@app.scheduled_job('interval', seconds=10, id='interval_job')
 def minute_task():
     """
     每隔 10 秒执行一次的任务
@@ -19,7 +19,7 @@ def minute_task():
 # ==========================================
 # 定时任务示例 2：Cron 表达式触发（Cron）
 # ==========================================
-@blocking.scheduled_job('cron', second=1, id="cron_job")
+@app.scheduled_job('cron', second=1, id="cron_job")
 def trigger_worker_cron():
     """
     每分钟的第 1 秒执行一次的任务

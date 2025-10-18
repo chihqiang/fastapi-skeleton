@@ -1,6 +1,6 @@
-from boot.celery import queue
+from boot.celery import app
 
 
-@queue.task(name="test_job")
+@app.task(name="test_job")
 def sample_job():
     print("test_job!")

@@ -104,16 +104,16 @@ class Product(BaseModel):
 ```python
 # 示例：每分钟执行一次的任务
 import datetime
-from boot.scheduler import blocking
+from boot.scheduler import app
 
 
-@blocking.scheduled_job('cron', minute='*', id='minute_task')
+@app.scheduled_job('cron', minute='*', id='minute_task')
 def minute_task():
     print(f"[Task] 当前时间: {datetime.datetime.now()}")
 
 
 # 示例：每天凌晨1点执行的任务
-@blocking.scheduled_job('cron', hour=1, minute=0, id='daily_task')
+@app.scheduled_job('cron', hour=1, minute=0, id='daily_task')
 def daily_task():
     print(f"[Daily Task] 执行日期: {datetime.date.today()}")
 ```

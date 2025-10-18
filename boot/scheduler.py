@@ -1,12 +1,13 @@
 import logging
 
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from config import setting
 from libs import modules
 
 # 全局调度器实例，所有任务装饰器会使用它注册任务
-blocking = BlockingScheduler(
+app = AsyncIOScheduler(
     jobstores={
         "default": SQLAlchemyJobStore(url=setting.DATABASE_URL),
     },
@@ -22,12 +23,12 @@ blocking = BlockingScheduler(
 
 
 @modules.loader(package_name=setting.CRONTAB_PACKAGE_NAME, scan_prior=True)
-def create_app() -> BlockingScheduler:
+def create_app() -> AsyncIOScheduler:
     """调度器主启动函数"""
     logging.info("===== 开始启动定时任务调度器 =====")
-    global blocking
+    global app
     # 打印已注册的任务列表，便于验证
-    jobs = blocking.get_jobs()
+    jobs = app.get_jobs()
     if jobs:
         logging.info(f"成功加载 {len(jobs)} 个定时任务:")
         for job in jobs:
@@ -36,4 +37,4 @@ def create_app() -> BlockingScheduler:
         logging.warning("未发现任何定时任务，请检查任务模块是否正确配置")
 
     logging.info("调度器启动成功，开始运行任务 (按 Ctrl+C 停止)")
-    return blocking
+    return app
