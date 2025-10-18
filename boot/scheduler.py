@@ -2,7 +2,6 @@ import logging
 
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.schedulers.blocking import BlockingScheduler
 from config import setting
 from libs import modules
 

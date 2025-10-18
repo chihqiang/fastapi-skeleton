@@ -1,24 +1,24 @@
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.exceptions.exception import AuthenticationError
 from app.http import depends
-from app.http.auth.model import TokenResponse
+from app.http.auth.model import TokenResponse, LoginRequest
 from app.models.user import User
+from app.support.fast import BaseResponse, JSONSuccess
 from libs import crypto
 
 router = APIRouter(prefix="/auth")
 
 
-@router.post("/login", response_model=TokenResponse)
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(depends.get_db)):
-    return loginToken(form_data.username, form_data.password, db)
+@router.post("/login", response_model=BaseResponse[TokenResponse])
+async def login(request: LoginRequest, db: Session = Depends(depends.get_db)):
+    return loginToken(request.username, request.password, db)
 
 
-def loginToken(username: str, password: str, db: Session) -> TokenResponse:
+def loginToken(username: str, password: str, db: Session) -> BaseResponse[TokenResponse]:
     """
     用户登录核心逻辑，生成 JWT Token。
 
@@ -56,8 +56,7 @@ def loginToken(username: str, password: str, db: Session) -> TokenResponse:
     # 生成 JWT Token
     access_token = crypto.jwt_encode(user.id, expires_delta)
 
-    # 返回 Token 响应
-    return TokenResponse(
+    return JSONSuccess(data=TokenResponse(
         access_token=access_token,
         expires_in=int(expires_delta.total_seconds())
-    )
+    ))

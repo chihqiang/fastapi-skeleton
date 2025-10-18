@@ -1,5 +1,7 @@
+from typing import Annotated
+
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials, APIKeyHeader
 from sqlalchemy.orm import Session
 from app.exceptions.exception import AuthenticationError
 from app.models.user import User
@@ -20,15 +22,15 @@ def get_db():
         db.close()
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+security = HTTPBearer()
 
 
 def get_current_user(
-        tokenStr: str = Depends(oauth2_scheme),
+        credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
         db: Session = Depends(get_db)
 ) -> User:
     try:
-        payload = crypto.jwt_decode(tokenStr)
+        payload = crypto.jwt_decode(credentials.credentials)
     except jwt.ExpiredSignatureError:
         # token 已过期
         raise AuthenticationError(message="Token Expired")
