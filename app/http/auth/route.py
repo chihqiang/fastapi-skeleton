@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.exceptions.exception import AuthenticationError
-from app.http import depends
-from app.http.auth.model import TokenResponse, LoginRequest
+from app.support import depts
+from app.http.auth.schemas import TokenResponse, LoginRequest
 from app.models.user import User
 from app.support.fast import BaseResponse, JSONSuccess
 from libs import crypto
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/auth")
 
 
 @router.post("/login", response_model=BaseResponse[TokenResponse])
-async def login(request: LoginRequest, db: Session = Depends(depends.get_db)):
+async def login(request: LoginRequest, db: Session = Depends(depts.get_db)):
     return loginToken(request.username, request.password, db)
 
 

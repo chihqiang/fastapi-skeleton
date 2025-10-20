@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
-from app.http import depends
-from app.http.depends import get_db
-from app.http.user.model import UserDetail
+from app.support import depts
+from app.support.depts import get_db
+from app.http.user.schemas import UserDetail
 from app.models.user import User
 from app.support.fast import BaseResponse, JSONSuccess
 
@@ -10,7 +10,7 @@ router = APIRouter(prefix="/user")
 
 
 @router.get("/me", response_model=BaseResponse[UserDetail], dependencies=[Depends(get_db)])
-def me(user: User = Depends(depends.get_current_user)):
+def me(user: User = Depends(depts.get_current_user)):
     """
     获取当前登录用户信息
 

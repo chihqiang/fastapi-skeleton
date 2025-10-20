@@ -1,4 +1,3 @@
-# 导入FastAPI的JSON序列化工具，用于处理Pydantic模型到JSON的转换
 from fastapi.encoders import jsonable_encoder
 from pydantic.generics import GenericModel
 from typing import Generic, TypeVar, Optional
@@ -21,18 +20,6 @@ class BaseResponse(GenericModel, Generic[T]):
     """响应数据：成功时返回具体业务数据，错误时为None"""
 
 
-def SuccessBaseResponse(data: Optional[T] = None, message: str = "success") -> BaseResponse[T]:
-    """
-    生成成功响应的BaseResponse模型实例
-    用于需要返回Pydantic模型而非直接返回HTTP响应的场景
-
-    :param data: 成功时需要返回的业务数据，可选（默认为None）
-    :param message: 成功提示信息，可选（默认为"success"）
-    :return: 包含成功信息的BaseResponse实例
-    """
-    return BaseResponse[T](code=200, message=message, data=data)
-
-
 def JSONSuccess(data: Optional[T] = None, message: str = "success"):
     """
     生成成功的JSONResponse响应
@@ -43,24 +30,12 @@ def JSONSuccess(data: Optional[T] = None, message: str = "success"):
     :return: FastAPI的JSONResponse对象，HTTP状态码固定为200
     """
     # 先创建BaseResponse模型实例
-    response = SuccessBaseResponse(data=data, message=message)
+    response = BaseResponse[T](code=200, message=message, data=data)
     # 转换为JSON响应：使用jsonable_encoder处理序列化，设置HTTP状态码为200
     return JSONResponse(
         status_code=200,
         content=jsonable_encoder(response)
     )
-
-
-def ErrorBaseResponse(message: str = "Error", code: int = 500) -> BaseResponse[None]:
-    """
-    生成错误响应的BaseResponse模型实例
-    用于需要返回Pydantic模型而非直接返回HTTP响应的场景
-
-    :param message: 错误提示信息，可选（默认为"Error"）
-    :param code: 业务错误码，可选（默认为500，代表服务器内部错误）
-    :return: 包含错误信息的BaseResponse实例（data固定为None）
-    """
-    return BaseResponse[None](code=code, message=message, data=None)
 
 
 def JSONError(message: str = "Error", code: int = 500):
@@ -73,7 +48,7 @@ def JSONError(message: str = "Error", code: int = 500):
     :return: FastAPI的JSONResponse对象，HTTP状态码固定为200
     """
     # 先创建错误响应的BaseResponse模型实例
-    response = ErrorBaseResponse(message=message, code=code)
+    response = BaseResponse[None](code=code, message=message, data=None)
     # 转换为JSON响应：HTTP状态码固定为200，业务错误通过code字段体现
     return JSONResponse(
         status_code=200,
@@ -91,7 +66,7 @@ def JSONCodeError(code: int = 500, message: str = "Error"):
     :return: FastAPI的JSONResponse对象，HTTP状态码与code参数一致
     """
     # 先创建错误响应的BaseResponse模型实例
-    response = ErrorBaseResponse(message=message, code=code)
+    response = BaseResponse[None](code=code, message=message, data=None)
     # 转换为JSON响应：HTTP状态码与业务错误码保持一致
     return JSONResponse(
         status_code=code,
