@@ -1,7 +1,7 @@
 from fastapi.exceptions import RequestValidationError
 from fastapi import status, HTTPException, Request
-from app.exceptions.exception import AuthenticationError, AuthorizationError
-from app.support.fast import JSONCodeError
+from app.exceptions.exception import AuthenticationError, AuthorizationError, BusinessException
+from app.support.fast import JSONCodeError, JSONError
 
 
 def register(app):
@@ -25,6 +25,14 @@ def register(app):
         返回 HTTP 403 禁止访问响应
         """
         return JSONCodeError(message=e.message, code=status.HTTP_403_FORBIDDEN)
+
+    @app.exception_handler(BusinessException)
+    async def business_exception_handler(request: Request, e: BusinessException):
+        """
+        处理权限不足的异常 (AuthorizationError)
+        返回 HTTP 403 禁止访问响应
+        """
+        return JSONError(message=e.message, code=e.code, status_code=e.status_code)
 
     @app.exception_handler(HTTPException)
     async def custom_http_exception_handler(request: Request, e: HTTPException):

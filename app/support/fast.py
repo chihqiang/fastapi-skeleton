@@ -38,7 +38,7 @@ def JSONSuccess(data: Optional[T] = None, message: str = "success"):
     )
 
 
-def JSONError(message: str = "Error", code: int = 500):
+def JSONError(message: str = "Error", code: int = 500, status_code: int = 200):
     """
     生成错误的JSONResponse响应（HTTP状态码固定为200）
     适用于前端统一处理响应格式的场景（通过业务code判断错误类型）
@@ -51,24 +51,10 @@ def JSONError(message: str = "Error", code: int = 500):
     response = BaseResponse[None](code=code, message=message, data=None)
     # 转换为JSON响应：HTTP状态码固定为200，业务错误通过code字段体现
     return JSONResponse(
-        status_code=200,
+        status_code=status_code,
         content=jsonable_encoder(response)
     )
 
 
 def JSONCodeError(code: int = 500, message: str = "Error"):
-    """
-    生成错误的JSONResponse响应（HTTP状态码与业务code一致）
-    符合HTTP规范的错误处理方式（如400对应参数错误，404对应资源不存在）
-
-    :param code: 业务错误码（同时作为HTTP状态码），可选（默认为500）
-    :param message: 错误提示信息，可选（默认为"Error"）
-    :return: FastAPI的JSONResponse对象，HTTP状态码与code参数一致
-    """
-    # 先创建错误响应的BaseResponse模型实例
-    response = BaseResponse[None](code=code, message=message, data=None)
-    # 转换为JSON响应：HTTP状态码与业务错误码保持一致
-    return JSONResponse(
-        status_code=code,
-        content=jsonable_encoder(response)
-    )
+    return JSONError(message=message, code=code, status_code=code)
