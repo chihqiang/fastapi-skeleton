@@ -4,12 +4,12 @@ from app.support import depts
 from app.support.depts import get_db
 from app.http.user.schemas import UserDetail
 from app.models.user import User
-from app.support.fast import BaseResponse, JSONSuccess
+from app.support.fast import JSONSuccess
 
 router = APIRouter(prefix="/user")
 
 
-@router.get("/me", response_model=BaseResponse[UserDetail], dependencies=[Depends(get_db)])
+@router.get("/me", dependencies=[Depends(get_db)])
 def me(user: User = Depends(depts.get_current_user)):
     """
     获取当前登录用户信息

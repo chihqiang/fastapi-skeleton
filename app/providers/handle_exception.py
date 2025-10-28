@@ -32,7 +32,7 @@ def register(app):
         处理权限不足的异常 (AuthorizationError)
         返回 HTTP 403 禁止访问响应
         """
-        return JSONError(message=e.message, code=e.code, status_code=e.status_code)
+        return JSONError(message=e.message, code=e.code, http_code=e.status_code)
 
     @app.exception_handler(HTTPException)
     async def custom_http_exception_handler(request: Request, e: HTTPException):
