@@ -66,7 +66,7 @@ SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 #   1. 所有定时任务模块必须放在此包下，才能被注册逻辑扫描到。
 #   2. 如果有子包且希望递归扫描，需要在扫描逻辑中开启子包扫描配置。
 #   3. 修改此变量可更换定时任务模块路径，无需改动注册函数逻辑。
-CRONTAB_PACKAGE_NAME = "app.crontab"
+CRONTAB_PACKAGE_NAME = "app.tasks.crontab"
 
 # 业务任务模块根包名
 # 作用：指定包含普通业务任务模块的Python包路径，可用于定时或异步任务注册。
@@ -74,5 +74,5 @@ CRONTAB_PACKAGE_NAME = "app.crontab"
 # 注意：
 #   1. 同样支持递归扫描子包（需在扫描逻辑中配置）。
 #   2. 修改此变量可更换业务任务模块路径，无需改动注册函数逻辑。
-JOB_PACKAGE_NAME = "app.jobs"
+JOB_PACKAGE_NAME = "app.tasks.jobs"
 

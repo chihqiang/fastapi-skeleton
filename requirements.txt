@@ -2,7 +2,6 @@ fastapi==0.119.0
 uvicorn==0.37.0
 pydantic==2.12.1
 email-validator==2.3.0
-sqlalchemy==2.0.44
 passlib==1.7.4
 bcrypt==4.0.1
 pyjwt==2.10.1
@@ -10,4 +9,6 @@ python-multipart==0.0.20
 loguru==0.7.3
 apscheduler==3.11.0
 orjson==3.11.3
+redis==7.0.1
 celery==5.5.3
+sqlalchemy==2.0.44
