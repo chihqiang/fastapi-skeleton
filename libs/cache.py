@@ -255,13 +255,18 @@ class MemoryCache(CacheInterface):
 
 
 class CacheFactory:
+    SUPPORTED_CACHE_TYPE_MEMORY = "memory"
+    SUPPORTED_CACHE_TYPE_REDIS = "redis"
     # 支持的缓存类型（集中管理）
-    SUPPORTED_CACHE_TYPES = ["memory", "redis"]
+    SUPPORTED_CACHE_TYPES = [
+        SUPPORTED_CACHE_TYPE_MEMORY,
+        SUPPORTED_CACHE_TYPE_REDIS
+    ]
     """支持的缓存类型列表（字符串类型），新增类型需在此处添加"""
 
     # 默认配置（集中管理，所有场景共用一套默认值）
     DEFAULT_CONFIG = {
-        "type": "memory",  # 默认使用内存缓存（无需外部依赖）
+        "type": SUPPORTED_CACHE_TYPE_MEMORY,  # 默认使用内存缓存（无需外部依赖）
         # Redis缓存默认配置（仅当type为"redis"时生效）
         "redis": {
             "host": "localhost",  # Redis服务器地址（默认本地）
