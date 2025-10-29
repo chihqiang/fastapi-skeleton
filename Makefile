@@ -12,9 +12,13 @@ init:
 	@echo "👉 激活虚拟环境：source venv/bin/activate"
 
 # ===========================
-# 代码检查与自动修复
+# 代码检查
 # ===========================
 check:
+	@echo "🧹 清理 __pycache__ 与 Python 临时文件..."
+	@find . -type d -name "__pycache__" -exec rm -rf {} +
+	@find . -type f -name "*.pyc" -delete
+	@find . -type f -name "*.pyo" -delete
 	@echo "检查并运行 ruff 修复代码..."
 	@command -v ruff >/dev/null 2>&1 || { pip install ruff; }
 	@ruff check --fix .
@@ -24,16 +28,8 @@ check:
 	@echo "检查并运行 isort 排序导入..."
 	@command -v isort >/dev/null 2>&1 || {  pip install black; }
 	@isort .
-
-
-# ===========================
-# 清理项目缓存文件
-# ===========================
-clean:
 	@echo "🧹 清理 __pycache__ 与 Python 临时文件..."
-	@find . -type d -name "__pycache__" -exec rm -rf {} +  # 递归删除所有 __pycache__ 目录
-	@find . -type f -name "*.pyc" -delete                 # 删除所有 .pyc 编译文件
-	@find . -type f -name "*.pyo" -delete                 # 删除所有 .pyo 优化编译文件
+	@find . -type d -name "__pycache__" -exec rm -rf {} +
 
 # ===========================
 # 执行数据库迁移脚本
