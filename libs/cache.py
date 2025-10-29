@@ -1,6 +1,5 @@
 import threading
 from abc import ABC, abstractmethod
-from enum import unique, Enum
 from typing import Optional, Any, Dict, Tuple
 import redis
 from redis import Redis
