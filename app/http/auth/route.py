@@ -6,7 +6,7 @@ from app.http.auth import service
 from app.support import depts
 from app.http.auth.schemas import LoginRequest, SendCodeRequest, VerifyCodeRequest
 from app.support.fast import JSONSuccess
-from libs import strings, mcache
+from libs import strings, cache
 
 router = APIRouter(prefix="/auth")
 
@@ -21,7 +21,7 @@ def send_code_logic(email: str, code: str) -> None:
 @router.post("/send/code")
 async def sendCode(request: SendCodeRequest, background_tasks: BackgroundTasks):
     code = strings.random_string()
-    mcache.set(request.email, code, 300)
+    cache.set(request.email, code, 300)
     background_tasks.add_task(func=send_code_logic, email=request.email, code=code)
     return JSONSuccess(data={"email": request.email, "expire_seconds": 300}, message="验证码已发送，请注意查收")
 
@@ -30,12 +30,12 @@ async def sendCode(request: SendCodeRequest, background_tasks: BackgroundTasks):
 async def verifyCode(request: VerifyCodeRequest):
     try:
         key = request.email
-        stored_code = mcache.get(key)
+        stored_code = cache.get(key)
         if not stored_code:
             raise BusinessException(message="验证码不存在或已过期，请重新获取")
         if request.code != stored_code:
             raise BusinessException(message="验证码不正确，请重新输入")
-        mcache.delete(key)
+        cache.delete(key)
         return JSONSuccess(data={"email": request.email, "verified": True}, message="验证码验证通过")
     except Exception as e:
         raise BusinessException(message=f"验证码验证失败：{str(e)}", )

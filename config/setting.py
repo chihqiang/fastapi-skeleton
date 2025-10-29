@@ -76,3 +76,17 @@ CRONTAB_PACKAGE_NAME = "app.tasks.crontab"
 #   2. 修改此变量可更换业务任务模块路径，无需改动注册函数逻辑。
 JOB_PACKAGE_NAME = "app.tasks.jobs"
 
+CACHE_CFG = {
+    "type": "memory",
+    "redis": {
+        "host": "localhost",
+        "port": 6379,
+        "db": 0,
+        "password": None,
+        "max_connections": 10,
+        "decode_responses": False
+    },
+    "memory": {
+        "max_size": 1000
+    }
+}
