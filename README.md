@@ -56,8 +56,8 @@ LOG_RETENTION = "14 days"  # 日志保留时间
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"  # 生产环境请修改为随机生成的密钥
 
 # 定时任务配置
-CRONTAB_PACKAGE_NAME = "app.crontab"  # 定时任务模块根包名
-JOB_PACKAGE_NAME = "app.jobs"  # 业务任务模块根包名
+CRONTAB_PACKAGE_NAME = "app.tasks.crontab"  # 定时任务模块根包名
+JOB_PACKAGE_NAME = "app.tasks.jobs"  # 业务任务模块根包名
 ```
 
 ### API路由系统
@@ -157,7 +157,7 @@ app = AsyncIOScheduler(
 
 #### 创建定时任务
 
-1. 在`app/crontab/`目录下创建新的Python文件（如`your_task.py`）
+1. 在`app/tasks/crontab/`目录下创建新的Python文件（如`your_task.py`）
 2. 导入全局调度器并使用装饰器定义任务
 3. 调度器会自动扫描并注册该任务
 
