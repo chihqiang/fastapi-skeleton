@@ -46,7 +46,9 @@ async def main():
         # 注册系统信号（Ctrl+C / SIGTERM）
         loop = asyncio.get_running_loop()
         for sig in (signal.SIGINT, signal.SIGTERM):
-            loop.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s.name)))
+            loop.add_signal_handler(
+                sig, lambda s=sig: asyncio.create_task(shutdown(s.name))
+            )
         # 保持事件循环运行
         await asyncio.Event().wait()
     except asyncio.CancelledError:

@@ -1,8 +1,9 @@
-import sys
-import os
 import logging
-from base.model import engine, Base, SessionLocal
+import os
+import sys
+
 from app.models.user import User
+from base.model import Base, SessionLocal, engine
 from libs import crypto
 
 # 获取当前文件所在目录
@@ -44,7 +45,7 @@ def create_default_admin():
             nickname="管理员",
             state="enabled",
             gender="unknown",
-            avatar=""
+            avatar="",
         )
         db.add(admin_user)
         db.commit()

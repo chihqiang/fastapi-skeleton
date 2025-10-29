@@ -84,9 +84,7 @@ CACHE_CFG = {
         "db": 0,
         "password": None,
         "max_connections": 10,
-        "decode_responses": False
+        "decode_responses": False,
     },
-    "memory": {
-        "max_size": 1000
-    }
+    "memory": {"max_size": 1000},
 }

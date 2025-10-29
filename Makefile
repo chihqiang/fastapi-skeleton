@@ -12,14 +12,19 @@ init:
 	@echo "👉 激活虚拟环境：source venv/bin/activate"
 
 # ===========================
-# 代码检查与自动修复（基于 ruff）
+# 代码检查与自动修复
 # ===========================
 check:
-	# 检查 ruff 是否安装，未安装则自动安装
-	@command -v ruff >/dev/null 2>&1 || { echo "🔧 安装 ruff 代码检查工具..."; pip install ruff; }
-	# 执行代码检查并自动修复当前目录
-	@echo "🔍 运行 ruff 检查并修复代码..."
+	@echo "检查并运行 ruff 修复代码..."
+	@command -v ruff >/dev/null 2>&1 || { pip install ruff; }
 	@ruff check --fix .
+	@echo "检查并运行 black 格式化代码..."
+	@command -v black >/dev/null 2>&1 || { pip install black; }
+	@black .
+	@echo "检查并运行 isort 排序导入..."
+	@command -v isort >/dev/null 2>&1 || {  pip install black; }
+	@isort .
+
 
 # ===========================
 # 清理项目缓存文件

@@ -1,6 +1,8 @@
 import logging
 import sys
+
 from loguru import logger
+
 from config import setting
 
 
@@ -13,7 +15,9 @@ def setup():
     """
     # 从配置中读取日志级别、路径和保留时间
     level = setting.LOG_LEVEL  # 日志级别，例如 "INFO"、"DEBUG"
-    path = setting.LOG_PATH  # 日志文件保存路径，如 "storage/logs/fastapi-{time:YYYY-MM-DD}.log"
+    path = (
+        setting.LOG_PATH
+    )  # 日志文件保存路径，如 "storage/logs/fastapi-{time:YYYY-MM-DD}.log"
     retention = setting.LOG_RETENTION  # 日志保留时间，例如 "14 days"
 
     # 拦截所有标准 logging 模块的日志，交由 Loguru 统一处理
@@ -27,13 +31,15 @@ def setup():
         logging.getLogger(name).propagate = True
 
     # 配置 Loguru 的输出方式
-    logger.configure(handlers=[
-        # 控制台输出日志（stdout）
-        {"sink": sys.stdout},
-        # 文件输出日志，每天凌晨 00:00 自动轮转日志文件，
-        # 并保留指定天数后自动清理旧日志
-        {"sink": path, "rotation": "00:00", "retention": retention},
-    ])
+    logger.configure(
+        handlers=[
+            # 控制台输出日志（stdout）
+            {"sink": sys.stdout},
+            # 文件输出日志，每天凌晨 00:00 自动轮转日志文件，
+            # 并保留指定天数后自动清理旧日志
+            {"sink": path, "rotation": "00:00", "retention": retention},
+        ]
+    )
 
 
 class InterceptHandler(logging.Handler):
@@ -61,4 +67,6 @@ class InterceptHandler(logging.Handler):
             depth += 1
 
         # 使用 Loguru 输出日志，保持原有异常信息和调用层级
-        logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
+        logger.opt(depth=depth, exception=record.exc_info).log(
+            level, record.getMessage()
+        )

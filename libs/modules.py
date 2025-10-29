@@ -1,7 +1,7 @@
 import importlib
 import logging
 import pkgutil
-from typing import List, Callable
+from typing import Callable, List
 
 
 class loader:
@@ -18,7 +18,12 @@ class loader:
 
     _scanned_packages = set()  # 类级缓存，用于避免重复导入同一包
 
-    def __init__(self, package_name: str, include_subpackages: bool = False, scan_prior: bool = False):
+    def __init__(
+        self,
+        package_name: str,
+        include_subpackages: bool = False,
+        scan_prior: bool = False,
+    ):
         """
         初始化装饰器参数
 
@@ -37,6 +42,7 @@ class loader:
         :param func: 被装饰的函数
         :return: 包装后的函数
         """
+
         def sync_wrapper(*args, **kwargs):
             # 前置扫描：函数执行前导入模块
             if self.scan_prior:
@@ -63,10 +69,14 @@ class loader:
         - 部分模块导入失败：输出 warning 日志，列出失败模块及异常
         - 包为空：输出 info 日志
         """
-        success_count, failed_modules = self.loader_pkg(self.package_name, self.include_subpackages)
+        success_count, failed_modules = self.loader_pkg(
+            self.package_name, self.include_subpackages
+        )
 
         if not failed_modules:
-            logging.info(f"✅ 成功导入 {self.package_name} 包下所有模块，共 {success_count} 个")
+            logging.info(
+                f"✅ 成功导入 {self.package_name} 包下所有模块，共 {success_count} 个"
+            )
         else:
             logging.warning(
                 f"⚠️ {self.package_name} 包模块导入完成 - "
@@ -78,7 +88,9 @@ class loader:
         if success_count == 0 and not failed_modules:
             logging.info(f"ℹ️ {self.package_name} 包下未发现任何可导入的模块")
 
-    def loader_pkg(self, package_name: str, include_subpackages: bool = False) -> (int, List[str]):
+    def loader_pkg(
+        self, package_name: str, include_subpackages: bool = False
+    ) -> (int, List[str]):
         """
         扫描指定包及其模块并导入，返回扫描结果。
 
@@ -102,7 +114,9 @@ class loader:
                 try:
                     if is_pkg and include_subpackages:
                         # 递归扫描子包
-                        sub_success, sub_failed = self.loader_pkg(module_path, include_subpackages)
+                        sub_success, sub_failed = self.loader_pkg(
+                            module_path, include_subpackages
+                        )
                         success_count += sub_success
                         failed_modules.extend(sub_failed)
                     else:
@@ -111,7 +125,9 @@ class loader:
                         success_count += 1
                 except Exception as e:
                     # 捕获导入异常，记录失败模块
-                    failed_modules.append(f"{module_path} (错误: {type(e).__name__}: {e})")
+                    failed_modules.append(
+                        f"{module_path} (错误: {type(e).__name__}: {e})"
+                    )
 
             # 标记包已扫描
             self._scanned_packages.add(package_name)

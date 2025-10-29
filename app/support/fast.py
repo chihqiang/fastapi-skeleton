@@ -1,18 +1,13 @@
-from typing import Optional, Any
+from typing import Any, Optional
 
 from fastapi.responses import JSONResponse, Response
 
 
-def createJSONResponse(code: int, message: str, data: Optional[Any] = None, http_code: int = 200) -> Response:
-    response_data = {
-        "code": code,
-        "message": message,
-        "data": data
-    }
-    return JSONResponse(
-        content=response_data,
-        status_code=http_code
-    )
+def createJSONResponse(
+    code: int, message: str, data: Optional[Any] = None, http_code: int = 200
+) -> Response:
+    response_data = {"code": code, "message": message, "data": data}
+    return JSONResponse(content=response_data, status_code=http_code)
 
 
 def JSONSuccess(data: Optional[Any] = None, message: str = "success"):

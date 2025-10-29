@@ -33,7 +33,12 @@ class BusinessException(Exception):
     用于区分系统异常和业务逻辑异常
     """
 
-    def __init__(self, message: str = "业务处理失败", code: int = 400, status_code: int = status.HTTP_200_OK):
+    def __init__(
+        self,
+        message: str = "业务处理失败",
+        code: int = 400,
+        status_code: int = status.HTTP_200_OK,
+    ):
         self.message = message
         self.code = code
         self.status_code = status_code

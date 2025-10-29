@@ -11,14 +11,16 @@ from config import setting
 # -----------------------------
 Base = declarative_base()
 
-connect_args = {"check_same_thread": False} if setting.DATABASE_URL.startswith("sqlite") else {}
+connect_args = (
+    {"check_same_thread": False} if setting.DATABASE_URL.startswith("sqlite") else {}
+)
 
 # 创建数据库引擎
 engine = create_engine(
     setting.DATABASE_URL,
     poolclass=pool.NullPool,
     connect_args=connect_args,
-    echo=True  # 打印 SQL 日志，可选
+    echo=True,  # 打印 SQL 日志，可选
 )
 # 创建 Session 工厂
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -32,20 +34,21 @@ class BaseModel(Base):
     基础模型类，提供创建时间和更新时间字段。
     该类为抽象类，不会在数据库中创建表。
     """
+
     __abstract__ = True  # 不会创建单独的表
 
     created_at = Column(
         DateTime,
         default=lambda: datetime.datetime.now(),
         nullable=False,
-        comment="创建时间"
+        comment="创建时间",
     )
     updated_at = Column(
         DateTime,
         default=lambda: datetime.datetime.now(),
         onupdate=lambda: datetime.datetime.now(),
         nullable=False,
-        comment="更新时间"
+        comment="更新时间",
     )
 
 
@@ -57,13 +60,10 @@ class BaseModelWithSoftDelete(BaseModel):
     带软删除功能的基础模型。
     继承自 BaseModel，增加 deleted_at 字段。
     """
+
     __abstract__ = True  # 抽象类，不会直接创建表
 
-    deleted_at = Column(
-        DateTime,
-        nullable=True,
-        comment="软删除时间"
-    )
+    deleted_at = Column(DateTime, nullable=True, comment="软删除时间")
 
     # -----------------------------
     # 类方法

@@ -20,11 +20,7 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(
-        debug=True,
-        lifespan=lifespan,
-        default_response_class=ORJSONResponse
-    )
+    app = FastAPI(debug=True, lifespan=lifespan, default_response_class=ORJSONResponse)
     register(app, handle_exception)  # 注册异常处理提供器
     boot(app, route_provider)  # 启动路由提供器
     return app
@@ -43,7 +39,7 @@ def register(app, provider):
     并记录日志表示注册完成。
     """
     provider.register(app)
-    logging.info(provider.__name__ + ' registered')  # 打印注册日志
+    logging.info(provider.__name__ + " registered")  # 打印注册日志
 
 
 def boot(app, provider):
@@ -59,4 +55,4 @@ def boot(app, provider):
     并记录日志表示启动完成。
     """
     provider.boot(app)
-    logging.info(provider.__name__ + ' booted')  # 打印启动日志
+    logging.info(provider.__name__ + " booted")  # 打印启动日志

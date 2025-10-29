@@ -1,7 +1,9 @@
-from passlib.context import CryptContext
 import datetime
-from typing import Union, Any, Optional
+from typing import Any, Optional, Union
+
 import jwt
+from passlib.context import CryptContext
+
 from config import setting
 
 # -----------------------------
@@ -42,7 +44,9 @@ def hash_make(password: str) -> str:
 # -----------------------------
 # 生成 JWT Token
 # -----------------------------
-def jwt_encode(subject: Union[str, Any], expires_delta: datetime.timedelta = datetime.timedelta(0)) -> str:
+def jwt_encode(
+    subject: Union[str, Any], expires_delta: datetime.timedelta = datetime.timedelta(0)
+) -> str:
     """
     生成JSON Web Token (JWT)
 

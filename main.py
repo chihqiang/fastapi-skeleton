@@ -1,7 +1,7 @@
 import uvicorn
 
-from boot.setup import logger
 from boot.application import create_app
+from boot.setup import logger
 
 logger.setup()
 

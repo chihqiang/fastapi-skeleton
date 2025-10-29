@@ -2,6 +2,7 @@ import logging
 
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from config import setting
 from libs import modules
 
@@ -11,13 +12,13 @@ app = AsyncIOScheduler(
         "default": SQLAlchemyJobStore(url=setting.DATABASE_URL),
     },
     # 时区配置（优先使用项目配置，默认UTC）
-    timezone=getattr(setting, 'TIMEZONE', 'UTC'),
+    timezone=getattr(setting, "TIMEZONE", "UTC"),
     # 任务默认参数（统一控制任务行为）
     job_defaults={
-        'coalesce': True,  # 合并错过的重复任务（避免任务堆积）
-        'max_instances': 3,  # 同一任务最大并发实例数
-        'misfire_grace_time': 30  # 任务误触发容忍时间（秒）
-    }
+        "coalesce": True,  # 合并错过的重复任务（避免任务堆积）
+        "max_instances": 3,  # 同一任务最大并发实例数
+        "misfire_grace_time": 30,  # 任务误触发容忍时间（秒）
+    },
 )
 
 

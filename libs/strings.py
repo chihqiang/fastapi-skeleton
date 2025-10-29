@@ -18,7 +18,7 @@ def random_digits(length: int = 6) -> str:
     if length <= 0:
         raise ValueError("长度必须为正整数")
     # 从string.digits（包含"0123456789"）中随机选择字符，重复length次并拼接
-    return ''.join(random.choice(string.digits) for _ in range(length))
+    return "".join(random.choice(string.digits) for _ in range(length))
 
 
 def random_letters(length: int = 6) -> str:
@@ -36,7 +36,7 @@ def random_letters(length: int = 6) -> str:
     if length <= 0:
         raise ValueError("长度必须为正整数")
     # 从string.ascii_letters（包含所有大小写字母）中随机选择字符，重复length次并拼接
-    return ''.join(random.choice(string.ascii_letters) for _ in range(length))
+    return "".join(random.choice(string.ascii_letters) for _ in range(length))
 
 
 def random_chinese(length: int = 6) -> str:
@@ -56,12 +56,11 @@ def random_chinese(length: int = 6) -> str:
     if length <= 0:
         raise ValueError("长度必须为正整数")
     # 从Unicode常用汉字范围随机生成字符，重复length次并拼接
-    return ''.join(chr(random.randint(0x4e00, 0x9fa5)) for _ in range(length))
+    return "".join(chr(random.randint(0x4E00, 0x9FA5)) for _ in range(length))
 
 
 def random_string(
-        length: int = 6,
-        char_type: Literal['digit', 'letter', 'chinese'] = 'digit'
+    length: int = 6, char_type: Literal["digit", "letter", "chinese"] = "digit"
 ) -> str:
     """
     生成指定长度和类型的随机字符串（汇总入口函数）
@@ -86,14 +85,16 @@ def random_string(
     """
     # 类型与生成函数的映射关系，修复拼写错误（random_ters→random_letters，random_nese→random_chinese）
     type_mapping = {
-        'digit': random_digits,
-        'letter': random_letters,
-        'chinese': random_chinese
+        "digit": random_digits,
+        "letter": random_letters,
+        "chinese": random_chinese,
     }
 
     # 校验字符类型是否支持
     if char_type not in type_mapping:
-        raise ValueError(f"不支持的类型：{char_type}，可选类型：{list(type_mapping.keys())}")
+        raise ValueError(
+            f"不支持的类型：{char_type}，可选类型：{list(type_mapping.keys())}"
+        )
 
     # 调用对应类型的生成函数并返回结果
     return type_mapping[char_type](length)

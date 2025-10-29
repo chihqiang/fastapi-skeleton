@@ -1,6 +1,8 @@
+from fastapi import HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
-from fastapi import status, HTTPException, Request
-from app.exceptions.exception import AuthenticationError, AuthorizationError, BusinessException
+
+from app.exceptions.exception import (AuthenticationError, AuthorizationError,
+                                      BusinessException)
 from app.support.fast import JSONCodeError, JSONError
 
 
@@ -10,7 +12,9 @@ def register(app):
     """
 
     @app.exception_handler(AuthenticationError)
-    async def authentication_exception_handler(request: Request, e: AuthenticationError):
+    async def authentication_exception_handler(
+        request: Request, e: AuthenticationError
+    ):
         """
         处理身份验证失败的异常 (AuthenticationError)
         返回 HTTP 401 未授权响应
@@ -48,7 +52,9 @@ def register(app):
         """
         errors = e.errors()
         if errors:
-            full_message = ", ".join(err.get('msg', "参数校验错误") for err in errors)
+            full_message = ", ".join(err.get("msg", "参数校验错误") for err in errors)
         else:
             full_message = "参数校验失败"
-        return JSONCodeError(message=full_message, code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        return JSONCodeError(
+            message=full_message, code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )

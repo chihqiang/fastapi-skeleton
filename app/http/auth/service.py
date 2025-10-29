@@ -1,9 +1,11 @@
 from datetime import timedelta
+
+from sqlalchemy.orm import Session
+
 from app.exceptions.exception import AuthenticationError
 from app.http.auth.schemas import TokenResponse
 from app.models.user import User
 from libs import crypto
-from sqlalchemy.orm import Session
 
 
 def loginToken(username: str, password: str, db: Session) -> TokenResponse:
@@ -40,6 +42,5 @@ def loginToken(username: str, password: str, db: Session) -> TokenResponse:
     # 生成 JWT Token
     access_token = crypto.jwt_encode(user.id, expires_delta)
     return TokenResponse(
-        access_token=access_token,
-        expires_in=int(expires_delta.total_seconds())
+        access_token=access_token, expires_in=int(expires_delta.total_seconds())
     )

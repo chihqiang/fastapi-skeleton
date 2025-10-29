@@ -1,10 +1,11 @@
 import threading
+import time
 from abc import ABC, abstractmethod
-from typing import Optional, Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
+
 import redis
 from redis import Redis
 from redis.exceptions import RedisError
-import time
 
 from config import setting
 
@@ -77,13 +78,13 @@ class RedisCache(CacheInterface):
     """
 
     def __init__(
-            self,
-            host: str = "localhost",
-            port: int = 6379,
-            db: int = 0,
-            password: Optional[str] = None,
-            max_connections: int = 10,
-            decode_responses: bool = False
+        self,
+        host: str = "localhost",
+        port: int = 6379,
+        db: int = 0,
+        password: Optional[str] = None,
+        max_connections: int = 10,
+        decode_responses: bool = False,
     ):
         """
         初始化Redis缓存连接池
@@ -103,7 +104,7 @@ class RedisCache(CacheInterface):
             db=db,
             password=password,
             max_connections=max_connections,
-            decode_responses=decode_responses
+            decode_responses=decode_responses,
         )
         self._lock = threading.Lock()  # 线程锁：保证多线程操作的原子性
 
@@ -225,9 +226,13 @@ class MemoryCache(CacheInterface):
             # 当缓存数量超出最大容量时，执行LRU淘汰
             if len(self._cache) > self._max_size:
                 # 按最后访问时间戳升序排序（最久未使用的键排在前面）
-                sorted_keys = sorted(self._cache.keys(), key=lambda k: self._cache[k][2])
+                sorted_keys = sorted(
+                    self._cache.keys(), key=lambda k: self._cache[k][2]
+                )
                 # 计算需要淘汰的数量：超出部分 + 10%预留空间（避免频繁触发淘汰）
-                evict_count = len(self._cache) - self._max_size + int(self._max_size * 0.1)
+                evict_count = (
+                    len(self._cache) - self._max_size + int(self._max_size * 0.1)
+                )
                 # 淘汰最久未使用的键
                 for key_to_evict in sorted_keys[:evict_count]:
                     del self._cache[key_to_evict]
@@ -257,10 +262,7 @@ class CacheFactory:
     SUPPORTED_CACHE_TYPE_MEMORY = "memory"
     SUPPORTED_CACHE_TYPE_REDIS = "redis"
     # 支持的缓存类型（集中管理）
-    SUPPORTED_CACHE_TYPES = [
-        SUPPORTED_CACHE_TYPE_MEMORY,
-        SUPPORTED_CACHE_TYPE_REDIS
-    ]
+    SUPPORTED_CACHE_TYPES = [SUPPORTED_CACHE_TYPE_MEMORY, SUPPORTED_CACHE_TYPE_REDIS]
     """支持的缓存类型列表（字符串类型），新增类型需在此处添加"""
 
     # 默认配置（集中管理，所有场景共用一套默认值）
@@ -273,12 +275,10 @@ class CacheFactory:
             "db": 0,  # Redis数据库编号（0-15）
             "password": None,  # 认证密码（默认无）
             "max_connections": 10,  # 连接池最大连接数
-            "decode_responses": False  # 是否自动解码为字符串（默认字节）
+            "decode_responses": False,  # 是否自动解码为字符串（默认字节）
         },
         # 内存缓存默认配置（仅当type为"memory"时生效）
-        "memory": {
-            "max_size": 1000  # 最大缓存容量（超出时LRU淘汰）
-        }
+        "memory": {"max_size": 1000},  # 最大缓存容量（超出时LRU淘汰）
     }
     """默认配置字典，所有未被用户覆盖的配置均使用此处值"""
 
@@ -337,7 +337,7 @@ class CacheFactory:
                 db=config["redis"]["db"],
                 password=config["redis"]["password"],
                 max_connections=config["redis"]["max_connections"],
-                decode_responses=config["redis"]["decode_responses"]
+                decode_responses=config["redis"]["decode_responses"],
             )
         elif current_type == "memory":
             return MemoryCache(max_size=config["memory"]["max_size"])

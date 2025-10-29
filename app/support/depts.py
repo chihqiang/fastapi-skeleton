@@ -1,13 +1,14 @@
 from typing import Annotated
 
+import jwt
 from fastapi import Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
+
 from app.exceptions.exception import AuthenticationError
 from app.models.user import User
 from base.model import SessionLocal
 from libs import crypto
-import jwt
 
 
 def get_db():
@@ -23,8 +24,8 @@ def get_db():
 
 
 def get_current_user(
-        credentials: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
-        db: Session = Depends(get_db)
+    credentials: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
+    db: Session = Depends(get_db),
 ) -> User:
     try:
         payload = crypto.jwt_decode(credentials.credentials)
@@ -37,10 +38,10 @@ def get_current_user(
     except Exception as e:
         # 处理其他未预料到的异常
         raise AuthenticationError(message=f"Token validation failed: {str(e)}")
-    user_id = payload.get('sub')
+    user_id = payload.get("sub")
     user = User.undelete(db).filter(User.id == user_id).first()
     if not user:
         raise AuthenticationError(message="User not found")
     if not user.is_enabled():
-        raise AuthenticationError(message='Inactive user')
+        raise AuthenticationError(message="Inactive user")
     return user
