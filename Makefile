@@ -31,6 +31,10 @@ check:
 	@echo "🧹 清理 __pycache__ 与 Python 临时文件..."
 	@find . -type d -name "__pycache__" -exec rm -rf {} +
 
+
+unpip:
+	pip freeze | xargs pip uninstall -y
+
 # ===========================
 # 执行数据库迁移脚本
 # ===========================
