@@ -21,7 +21,7 @@ def _convert_pydantic_to_dict(data: Any) -> Any:
 
 
 def createJSONResponse(
-    code: int, message: str, data: Optional[Any] = None, http_code: int = 200
+        code: int, message: str, data: Optional[Any] = None, http_code: int = 200
 ) -> Response:
     response_data = {
         "code": code,
@@ -36,8 +36,8 @@ def JSONSuccess(data: Optional[Any] = None, message: str = "success"):
 
 
 def JSONError(message: str = "Error", code: int = 500, http_code: int = 200):
-    return createJSONResponse(code=code, message=message, http_code=200)
+    return createJSONResponse(code=code, message=message, http_code=http_code)
 
 
 def JSONCodeError(code: int = 500, message: str = "Error"):
-    return createJSONResponse(message=message, code=code, http_code=code)
+    return JSONError(code=code, message=message, http_code=code)
