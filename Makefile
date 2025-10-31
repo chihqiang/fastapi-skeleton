@@ -26,7 +26,7 @@ check:
 	@command -v black >/dev/null 2>&1 || { pip install black; }
 	@black .
 	@echo "检查并运行 isort 排序导入..."
-	@command -v isort >/dev/null 2>&1 || {  pip install black; }
+	@command -v isort >/dev/null 2>&1 || {  pip install isort; }
 	@isort .
 	@echo "🧹 清理 __pycache__ 与 Python 临时文件..."
 	@find . -type d -name "__pycache__" -exec rm -rf {} +
