@@ -2,8 +2,8 @@ import logging
 import os
 import sys
 
+from app.models import Base, SessionLocal, engine
 from app.models.user import User
-from base.model import Base, SessionLocal, engine
 from libs import crypto
 
 # 获取当前文件所在目录

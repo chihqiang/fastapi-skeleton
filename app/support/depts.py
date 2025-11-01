@@ -6,8 +6,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.exceptions.exception import AuthenticationError
+from app.models import SessionLocal
 from app.models.user import User
-from base.model import SessionLocal
 from libs import crypto
 
 

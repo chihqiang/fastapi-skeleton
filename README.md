@@ -124,7 +124,8 @@ class User(BaseModelWithSoftDelete):
 ```python
 # 示例：创建产品模型
 from sqlalchemy import Column, Integer, String
-from base.model import BaseModel  # 或 BaseModelWithSoftDelete 如果需要软删除功能
+from app.models import BaseModel  # 或 BaseModelWithSoftDelete 如果需要软删除功能
+
 
 class Product(BaseModel):
     __tablename__ = "products"
