@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
+from pydantic import BaseModel
 from sqlalchemy import DateTime, create_engine, pool
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Mapped, Session, mapped_column, sessionmaker
@@ -47,6 +48,10 @@ class BaseModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         default=datetime.now, onupdate=datetime.now, comment="更新时间"
     )
+
+    @classmethod
+    def get_one(cls, db: Session, **filters) -> Optional[BaseModel]:
+        return db.query(cls).filter_by(**filters).first()
 
 
 # -----------------------------

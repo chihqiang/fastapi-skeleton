@@ -29,8 +29,7 @@ def loginToken(email: str, password: str, db: Session) -> TokenResponse:
     Raises:
         AuthenticationError: 用户不存在、密码错误或用户被禁用。
     """
-    # 查询未删除用户
-    user = User.undelete(db).filter(User.email == email).first()
+    user = User.get_one(db=db, email=email)
     # 验证密码
     if not user or not crypto.hash_verify(password, user.password):
         raise AuthenticationError("用户名或密码错误")
