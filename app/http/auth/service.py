@@ -8,7 +8,7 @@ from app.models.user import User
 from libs import crypto
 
 
-def loginToken(username: str, password: str, db: Session) -> TokenResponse:
+def loginToken(email: str, password: str, db: Session) -> TokenResponse:
     """
     用户登录核心逻辑，生成 JWT Token。
 
@@ -19,7 +19,7 @@ def loginToken(username: str, password: str, db: Session) -> TokenResponse:
     4. 生成 JWT Token 并返回。
 
     Args:
-        username: 用户名
+        email: 邮箱
         password: 密码
         db (Session): SQLAlchemy 数据库会话。
 
@@ -30,7 +30,7 @@ def loginToken(username: str, password: str, db: Session) -> TokenResponse:
         AuthenticationError: 用户不存在、密码错误或用户被禁用。
     """
     # 查询未删除用户
-    user = User.undelete(db).filter(User.username == username).first()
+    user = User.undelete(db).filter(User.email == email).first()
     # 验证密码
     if not user or not crypto.hash_verify(password, user.password):
         raise AuthenticationError("用户名或密码错误")

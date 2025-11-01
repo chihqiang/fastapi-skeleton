@@ -1,8 +1,9 @@
-import datetime
+from datetime import datetime
+from typing import Optional
 
-from sqlalchemy import Column, DateTime, create_engine, pool
+from sqlalchemy import DateTime, create_engine, pool
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Mapped, Session, mapped_column, sessionmaker
 
 from config import setting
 
@@ -37,18 +38,14 @@ class BaseModel(Base):
 
     __abstract__ = True  # 不会创建单独的表
 
-    created_at = Column(
-        DateTime,
-        default=lambda: datetime.datetime.now(),
-        nullable=False,
-        comment="创建时间",
+    id: Mapped[int] = mapped_column(
+        primary_key=True, autoincrement=True, comment="主键ID"
     )
-    updated_at = Column(
-        DateTime,
-        default=lambda: datetime.datetime.now(),
-        onupdate=lambda: datetime.datetime.now(),
-        nullable=False,
-        comment="更新时间",
+    created_at: Mapped[datetime] = mapped_column(
+        default=datetime.now, comment="创建时间"
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        default=datetime.now, onupdate=datetime.now, comment="更新时间"
     )
 
 
@@ -63,7 +60,9 @@ class BaseModelWithSoftDelete(BaseModel):
 
     __abstract__ = True  # 抽象类，不会直接创建表
 
-    deleted_at = Column(DateTime, nullable=True, comment="软删除时间")
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(), nullable=True, default=None, comment="删除时间"
+    )
 
     # -----------------------------
     # 类方法

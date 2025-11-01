@@ -9,8 +9,8 @@ class LoginRequest(BaseModel):
     并提供示例值辅助API文档生成（如Swagger）。
     """
 
-    # 用户名字段，必填项，无默认值，示例值为"admin"
-    username: str = Field(..., example="admin")
+    # 邮箱字段，必填项，无默认值，示例值为"admin@example.com"
+    email: str = Field(..., example="admin@example.com")
     # 密码字段，必填项，无默认值，示例值为"123456"
     password: str = Field(..., example="123456")
 

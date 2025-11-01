@@ -53,5 +53,5 @@ async def verifyCode(request: VerifyCodeRequest):
 
 @router.post("/login")
 async def login(request: LoginRequest, db: Session = Depends(depts.get_db)):
-    response = service.loginToken(request.username, request.password, db)
+    response = service.loginToken(request.email, request.password, db)
     return JSONSuccess(data=response)

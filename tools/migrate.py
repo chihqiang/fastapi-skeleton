@@ -31,21 +31,16 @@ def create_default_admin():
     db = SessionLocal()
     try:
         # 检查管理员是否存在
-        admin = db.query(User).filter(User.username == "admin").first()
+        admin = db.query(User).filter(User.email == "admin@example.com").first()
         if admin:
             logging.info("🔹 默认管理员已存在，跳过创建。")
             return
 
         # 创建管理员
         admin_user = User(
-            username="admin",
-            cellphone="13800000000",
-            password=crypto.hash_make("123456"),
             email="admin@example.com",
-            nickname="管理员",
+            password=crypto.hash_make("123456"),
             state="enabled",
-            gender="unknown",
-            avatar="",
         )
         db.add(admin_user)
         db.commit()

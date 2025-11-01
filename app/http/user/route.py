@@ -20,11 +20,6 @@ def me(user: User = Depends(depts.get_current_user)):
     return JSONSuccess(
         data=UserDetail(
             id=user.id,
-            username=user.username,
-            nickname=user.nickname,
-            gender=user.gender,
-            avatar=user.avatar,
-            cellphone=user.cellphone,
             email=user.email,
             email_verified_at=user.email_verified_at,
             state=user.state,
