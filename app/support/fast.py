@@ -21,7 +21,7 @@ def _convert_pydantic_to_dict(data: Any) -> Any:
 
 
 def createJSONResponse(
-        code: int, message: str, data: Optional[Any] = None, http_code: int = 200
+    code: int, message: str, data: Optional[Any] = None, http_code: int = 200
 ) -> Response:
     response_data = {
         "code": code,

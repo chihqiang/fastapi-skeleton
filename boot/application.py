@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
+from app.middleware import log
 from app.providers import handle_exception, route_provider
 
 
@@ -23,6 +24,7 @@ def create_app() -> FastAPI:
     app = FastAPI(debug=True, lifespan=lifespan, default_response_class=ORJSONResponse)
     register(app, handle_exception)  # 注册异常处理提供器
     boot(app, route_provider)  # 启动路由提供器
+    app.add_middleware(log.Middleware)
     return app
 
 
