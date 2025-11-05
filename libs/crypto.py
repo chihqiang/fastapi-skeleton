@@ -74,7 +74,6 @@ def jwt_encode(
     if expires_delta is not None and expires_delta.total_seconds() > 0:
         expire = datetime.datetime.now() + expires_delta
         to_encode.update({"exp": expire})
-
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 

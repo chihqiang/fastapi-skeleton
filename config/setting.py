@@ -21,7 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # os.path.join：跨平台路径拼接（避免Windows/Linux路径分隔符差异）
 # storage/db.sqlite3：数据库文件存放在项目根目录下的"storage"目录，文件名为"db.sqlite3"
 # 若后续切换数据库（如MySQL），可在此处修改为对应连接URL（如"mysql+pymysql://user:pass@host:port/db"）
-DATABASE_URL = "sqlite:///" + os.path.join(BASE_DIR, "storage", "db.sqlite3")
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "sqlite:///" + os.path.join(BASE_DIR, "storage", "db.sqlite3")
+)
 
 # -----------------------------
 # 日志系统配置
@@ -30,7 +32,7 @@ DATABASE_URL = "sqlite:///" + os.path.join(BASE_DIR, "storage", "db.sqlite3")
 # 日志输出级别：定义日志系统需要记录的日志严重程度
 # 级别优先级（从低到高）：DEBUG < INFO < WARNING < ERROR < CRITICAL
 # 设置为"INFO"时，会记录 INFO 及以上级别日志（忽略 DEBUG 级别的调试信息）
-LOG_LEVEL = "INFO"
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
 # 日志文件存储路径：指定日志文件的生成位置和命名规则
 # storage/logs/：日志文件存放在项目根目录下的"storage/logs"目录（需确保目录已创建，避免报错）
@@ -53,7 +55,9 @@ LOG_RETENTION = "14 days"
 # 1. 生产环境必须使用高强度随机字符串（推荐32位以上，可通过"openssl rand -hex 32"生成）
 # 2. 禁止将密钥泄露到前端代码、公开仓库（如GitHub）或配置文件备份中
 # 3. 建议定期轮换密钥（轮换时需处理旧Token的平滑过渡，避免用户强制登出）
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+)
 
 # -----------------------------
 # 定时任务（Crontab）配置
@@ -80,13 +84,17 @@ CRONTAB_PACKAGE_NAME = "app.tasks.crontab"
 #   2. 修改此变量可更换业务任务模块路径，无需改动注册函数逻辑。
 JOB_PACKAGE_NAME = "app.tasks.jobs"
 
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+REDIS_DB = os.getenv("REDIS_DB", 0)
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", None)
 CACHE_CFG = {
     "type": "memory",
     "redis": {
-        "host": "localhost",
-        "port": 6379,
-        "db": 0,
-        "password": None,
+        "host": REDIS_HOST,
+        "port": REDIS_PORT,
+        "db": REDIS_DB,
+        "password": REDIS_PASSWORD,
         "max_connections": 10,
         "decode_responses": False,
     },
