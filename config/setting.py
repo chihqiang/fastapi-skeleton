@@ -1,6 +1,10 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # -----------------------------
 # 项目核心路径配置
 # -----------------------------

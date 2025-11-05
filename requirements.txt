@@ -12,3 +12,4 @@ orjson==3.11.3
 redis==7.0.1
 celery==5.5.3
 sqlalchemy==2.0.44
+python-dotenv==1.2.1
